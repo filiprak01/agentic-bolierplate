@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AGENT-671 Worker Dashboard Design Options</title>
+    <style>
+      :root {
+        font-family: Inter, Arial, sans-serif;
+        color: #172033;
+        background: #f6f8fb;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      .intro {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+
+      .screen {
+        border: 1px solid #d6dce8;
+        border-radius: 8px;
+        background: #ffffff;
+        overflow: hidden;
+        box-shadow: 0 12px 32px rgba(24, 36, 56, 0.08);
+        margin-bottom: 24px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        background: #22314f;
+        color: #ffffff;
+      }
+
+      .tabs,
+      .filters,
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill,
+      button {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 7px 10px;
+        color: #172033;
+        font: inherit;
+      }
+
+      button.primary {
+        background: #0f766e;
+        color: #ffffff;
+        border-color: #0f766e;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(230px, 0.9fr) minmax(280px, 1.1fr) minmax(280px, 1.2fr);
+        min-height: 520px;
+      }
+
+      .pane {
+        border-right: 1px solid #e5e7eb;
+        padding: 14px;
+        display: grid;
+        align-content: start;
+        gap: 12px;
+      }
+
+      .pane:last-child {
+        border-right: 0;
+      }
+
+      .assignment {
+        border: 1px solid #d6dce8;
+        border-left: 5px solid #0f766e;
+        border-radius: 8px;
+        padding: 10px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .assignment.blocked {
+        border-left-color: #c2410c;
+      }
+
+      .assignment.waiting {
+        border-left-color: #b45309;
+      }
+
+      .meta {
+        color: #475569;
+        font-size: 13px;
+      }
+
+      .lifecycle {
+        display: grid;
+        gap: 8px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 26px 1fr auto;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid #d6dce8;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-block;
+        background: #94a3b8;
+      }
+
+      .done .dot {
+        background: #0f766e;
+      }
+
+      .next .dot {
+        background: #2563eb;
+      }
+
+      .blocked .dot {
+        background: #c2410c;
+      }
+
+      .skipped .dot {
+        background: #64748b;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 10px;
+      }
+
+      .event {
+        border: 1px solid #d6dce8;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fbfcfe;
+      }
+
+      .graph {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .node {
+        border: 1px solid #94a3b8;
+        border-radius: 8px;
+        padding: 9px;
+        background: #ffffff;
+        text-align: center;
+        min-height: 48px;
+      }
+
+      @media (max-width: 900px) {
+        main {
+          padding: 16px;
+        }
+
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .pane {
+          border-right: 0;
+          border-bottom: 1px solid #e5e7eb;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <h1>AGENT-671 Worker Dashboard And Assignment Visibility</h1>
+        <p>
+          Selected direction: Option A - Split Dashboard With Lifecycle Rail And Timeline.
+        </p>
+      </section>
+
+      <article class="screen">
+        <header>
+          <h2>Agent Status</h2>
+          <div class="tabs">
+            <span class="pill">Assignments</span>
+            <span class="pill">Lifecycle</span>
+            <span class="pill">Timeline</span>
+            <span class="pill">Graph</span>
+          </div>
+        </header>
+        <div class="workspace">
+          <section class="pane" aria-label="Assignment list">
+            <div class="filters">
+              <span class="pill">All projects</span>
+              <span class="pill">Waiting</span>
+              <span class="pill">Blocked</span>
+              <span class="pill">Stale lock</span>
+            </div>
+            <article class="assignment">
+              <strong>AP-29 Development</strong>
+              <span class="meta">Project AP - Developer - active worker</span>
+              <span>Next expected step: Review</span>
+            </article>
+            <article class="assignment blocked">
+              <strong>AGENT-638 Frontend</strong>
+              <span class="meta">Project AGENT - waiting for design</span>
+              <span>Blocked/stuck: Design Reference missing</span>
+            </article>
+            <article class="assignment waiting">
+              <strong>AGENT-664 Limits UI</strong>
+              <span class="meta">Waiting for limit capacity</span>
+              <span>Resume after Product Owner updates quota</span>
+            </article>
+          </section>
+
+          <section class="pane" aria-label="Story lifecycle">
+            <h3>Story lifecycle</h3>
+            <div class="lifecycle">
+              <div class="step done"><span class="dot"></span><strong>Product Planning</strong><span>Done</span></div>
+              <div class="step done"><span class="dot"></span><strong>Architecture</strong><span>Done</span></div>
+              <div class="step done"><span class="dot"></span><strong>Development</strong><span>Done</span></div>
+              <div class="step next"><span class="dot"></span><strong>Review</strong><span>Next expected step</span></div>
+              <div class="step"><span class="dot"></span><strong>Testing</strong><span>Not started</span></div>
+              <div class="step skipped"><span class="dot"></span><strong>Regression</strong><span>Skipped/not applicable</span></div>
+              <div class="step blocked"><span class="dot"></span><strong>Release Acceptance</strong><span>Waiting for PO input</span></div>
+            </div>
+          </section>
+
+          <section class="pane" aria-label="Timeline and graph">
+            <h3>Communication timeline</h3>
+            <div class="timeline">
+              <article class="event">
+                <strong>Orchestrator resume_request</strong>
+                <p class="meta">Reason: review queue unblocked and limits available.</p>
+              </article>
+              <article class="event">
+                <strong>Dependency gate decision</strong>
+                <p class="meta">Refused to resume: AGENT-670 not TEST COMPLETED.</p>
+              </article>
+              <article class="event">
+                <strong>PO inbox question</strong>
+                <p class="meta">Waiting for Product Owner clarification.</p>
+              </article>
+            </div>
+            <h3>Graph view</h3>
+            <div class="graph" aria-label="Graph fallback nodes">
+              <span class="node">Project</span>
+              <span class="node">Jira issue</span>
+              <span class="node">Agent role</span>
+              <span class="node">Worker assignment</span>
+              <span class="node">Durable message</span>
+              <span class="node">Artifact</span>
+            </div>
+            <div class="actions">
+              <button class="primary" type="button">Request worker resume</button>
+              <button type="button">Release stale lock</button>
+              <button type="button">Open PO blocker</button>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

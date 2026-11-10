@@ -1,0 +1,3 @@
+interface:
+  display_name: "Codex Quota Guard"
+  short_description: "Refresh and check Codex quota before and after agent work"

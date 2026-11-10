@@ -1,0 +1,260 @@
+x-agentic-build: &agentic-build
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - .env
+  volumes:
+    - .:/workspace
+    - ./data:/workspace/data
+    - ${TARGET_PROJECT_PATH:-.}:/workspace/project
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+x-agentic-worker-environment: &agentic-worker-environment
+  DATABASE_URL: postgresql://agentic:agentic@postgres:5432/agentic
+  REDIS_URL: redis://redis:6379/0
+  AGENTIC_WORKER_DRY_RUN: "true"
+  AGENTIC_WORKER_POLL_INTERVAL_SECONDS: ${AGENTIC_WORKER_POLL_INTERVAL_SECONDS:-30}
+  AGENTIC_WORKSPACES_ROOT: ${AGENTIC_WORKSPACES_ROOT:-/workspace/data/agent-workspaces}
+  GITHUB_AUTH_MODE: ${GITHUB_AUTH_MODE:-https}
+  GIT_REMOTE_MODE: ${GIT_REMOTE_MODE:-https}
+  GITHUB_SSH_KEY_PATH: ${GITHUB_SSH_KEY_PATH:-}
+  GITHUB_SSH_PRIVATE_KEY: ${GITHUB_SSH_PRIVATE_KEY:-}
+  GITHUB_SSH_PRIVATE_KEY_B64: ${GITHUB_SSH_PRIVATE_KEY_B64:-}
+  GITHUB_SSH_KNOWN_HOSTS_PATH: ${GITHUB_SSH_KNOWN_HOSTS_PATH:-}
+  GITHUB_SSH_STRICT_HOST_KEY_CHECKING: ${GITHUB_SSH_STRICT_HOST_KEY_CHECKING:-true}
+
+x-agentic-worker-command: &agentic-worker-command
+  - sh
+  - -c
+  - "while true; do agentic worker run-once --role $${AGENTIC_SERVICE_ROLE} --worker-id $${AGENTIC_WORKER_ID} --container-name $${HOSTNAME} --workspace-path /workspace/project; sleep $${AGENTIC_WORKER_POLL_INTERVAL_SECONDS:-30}; done"
+
+services:
+  api:
+    image: ${AGENTIC_OPERATOR_API_IMAGE:-agentic-boilerplate/operator-api:local}
+    <<: *agentic-build
+    profiles: ["operator"]
+    restart: unless-stopped
+    ports:
+      - "${AGENTIC_API_PORT:-8000}:8000"
+    environment:
+      AGENTIC_SERVICE_ROLE: api
+      DATABASE_URL: postgresql://agentic:agentic@postgres:5432/agentic
+      REDIS_URL: redis://redis:6379/0
+    command:
+      - sh
+      - -c
+      - "agentic --inbox-root /workspace/data/po-inbox api serve --data-root /workspace/data --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  operator-ui:
+    image: ${AGENTIC_OPERATOR_UI_IMAGE:-agentic-boilerplate/operator-ui:local}
+    profiles: ["operator"]
+    build:
+      context: ./ui/operator
+      dockerfile: Dockerfile
+      args:
+        VITE_AGENTIC_PROJECT_NAME: ${VITE_AGENTIC_PROJECT_NAME:-Agentic Boilerplate}
+        VITE_AGENTIC_JIRA_PROJECT_KEY: ${JIRA_PROJECT_KEY:-AGENT}
+        VITE_AGENTIC_API_BASE_URL: ${VITE_AGENTIC_API_BASE_URL:-http://localhost:8000}
+    restart: unless-stopped
+    ports:
+      - "${AGENTIC_OPERATOR_UI_PORT:-5173}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    image: ${AGENTIC_WORKER_PLATFORM_IMAGE:-agentic-boilerplate/worker-platform:local}
+    <<: *agentic-build
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: platform
+      AGENTIC_WORKER_ID: worker-platform
+    command: *agentic-worker-command
+
+  worker-product-planning:
+    image: ${AGENTIC_WORKER_PRODUCT_PLANNING_IMAGE:-agentic-boilerplate/worker-product-planning:local}
+    <<: *agentic-build
+    profiles: ["workers", "product-planning"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: product_planning
+      AGENTIC_WORKER_ID: product-planning-1
+    command: *agentic-worker-command
+
+  worker-architecture:
+    image: ${AGENTIC_WORKER_ARCHITECTURE_IMAGE:-agentic-boilerplate/worker-architecture:local}
+    <<: *agentic-build
+    profiles: ["workers", "architecture"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: architecture
+      AGENTIC_WORKER_ID: architecture-1
+    command: *agentic-worker-command
+
+  worker-developer:
+    image: ${AGENTIC_WORKER_DEVELOPER_IMAGE:-agentic-boilerplate/worker-developer:local}
+    <<: *agentic-build
+    profiles: ["workers", "developer"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: developer
+      AGENTIC_WORKER_ID: developer-1
+    command: *agentic-worker-command
+
+  worker-review:
+    image: ${AGENTIC_WORKER_REVIEW_IMAGE:-agentic-boilerplate/worker-review:local}
+    <<: *agentic-build
+    profiles: ["workers", "review"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: review
+      AGENTIC_WORKER_ID: review-1
+    command: *agentic-worker-command
+
+  worker-tester:
+    image: ${AGENTIC_WORKER_TESTER_IMAGE:-agentic-boilerplate/worker-tester:local}
+    <<: *agentic-build
+    profiles: ["workers", "tester"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: tester
+      AGENTIC_WORKER_ID: tester-1
+    command: *agentic-worker-command
+
+  worker-release-manager:
+    image: ${AGENTIC_WORKER_RELEASE_MANAGER_IMAGE:-agentic-boilerplate/worker-release-manager:local}
+    <<: *agentic-build
+    profiles: ["workers", "release-manager"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: release_manager
+      AGENTIC_WORKER_ID: release-manager-1
+    command: *agentic-worker-command
+
+  worker-scheduler:
+    image: ${AGENTIC_WORKER_SCHEDULER_IMAGE:-agentic-boilerplate/worker-scheduler:local}
+    <<: *agentic-build
+    profiles: ["workers", "scheduler"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: scheduler
+      AGENTIC_WORKER_ID: scheduler-1
+    command: *agentic-worker-command
+
+  worker-platform:
+    image: ${AGENTIC_WORKER_PLATFORM_IMAGE:-agentic-boilerplate/worker-platform:local}
+    <<: *agentic-build
+    profiles: ["workers", "platform"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: platform
+      AGENTIC_WORKER_ID: platform-1
+    command: *agentic-worker-command
+
+  worker-frontend:
+    image: ${AGENTIC_WORKER_FRONTEND_IMAGE:-agentic-boilerplate/worker-frontend:local}
+    <<: *agentic-build
+    profiles: ["workers", "frontend"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: frontend
+      AGENTIC_WORKER_ID: frontend-1
+    command: *agentic-worker-command
+
+  worker-ui-ux:
+    image: ${AGENTIC_WORKER_UI_UX_IMAGE:-agentic-boilerplate/worker-ui-ux:local}
+    <<: *agentic-build
+    profiles: ["workers", "ui-ux"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: ui_ux
+      AGENTIC_WORKER_ID: ui-ux-1
+    command: *agentic-worker-command
+
+  worker-security:
+    image: ${AGENTIC_WORKER_SECURITY_IMAGE:-agentic-boilerplate/worker-security:local}
+    <<: *agentic-build
+    profiles: ["workers", "security"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: security
+      AGENTIC_WORKER_ID: security-1
+    command: *agentic-worker-command
+
+  worker-docs-confluence:
+    image: ${AGENTIC_WORKER_DOCS_CONFLUENCE_IMAGE:-agentic-boilerplate/worker-docs-confluence:local}
+    <<: *agentic-build
+    profiles: ["workers", "docs-confluence"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: docs_confluence
+      AGENTIC_WORKER_ID: docs-confluence-1
+    command: *agentic-worker-command
+
+  worker-devops-platform:
+    image: ${AGENTIC_WORKER_DEVOPS_PLATFORM_IMAGE:-agentic-boilerplate/worker-devops-platform:local}
+    <<: *agentic-build
+    profiles: ["workers", "devops-platform"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: devops_platform
+      AGENTIC_WORKER_ID: devops-platform-1
+    command: *agentic-worker-command
+
+  worker-data-persistence:
+    image: ${AGENTIC_WORKER_DATA_PERSISTENCE_IMAGE:-agentic-boilerplate/worker-data-persistence:local}
+    <<: *agentic-build
+    profiles: ["workers", "data-persistence"]
+    environment:
+      <<: *agentic-worker-environment
+      AGENTIC_SERVICE_ROLE: data_persistence
+      AGENTIC_WORKER_ID: data-persistence-1
+    command: *agentic-worker-command
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-agentic}
+      POSTGRES_USER: ${POSTGRES_USER:-agentic}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agentic}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-agentic} -d $${POSTGRES_DB:-agentic}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+  redis-data:

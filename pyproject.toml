@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-boilerplate"
+version = "1.2.0"
+description = "Local-first multi-agent software delivery platform."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic>=1.13",
+    "psycopg[binary]>=3.1",
+]
+
+[project.scripts]
+agentic = "agentic_boilerplate.entrypoint:main"
+agentic-boilerplate = "agentic_boilerplate.entrypoint:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "PyYAML>=6.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

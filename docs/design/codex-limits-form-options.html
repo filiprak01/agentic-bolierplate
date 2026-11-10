@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AGENT-670 Codex Limits Form Options</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, Arial, sans-serif;
+        background: #f7f8fb;
+        color: #1f2937;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      .intro {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+      }
+
+      .screen {
+        border: 1px solid #d8dee9;
+        border-radius: 8px;
+        background: #ffffff;
+        overflow: hidden;
+        box-shadow: 0 10px 28px rgba(27, 39, 56, 0.08);
+      }
+
+      .screen header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #e5e7eb;
+        background: #25324a;
+        color: #ffffff;
+      }
+
+      .shell-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .menu {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+      }
+
+      .menu span,
+      .menu span::before,
+      .menu span::after {
+        display: block;
+        width: 16px;
+        height: 2px;
+        background: #ffffff;
+        content: "";
+      }
+
+      .menu span::before {
+        transform: translateY(-6px);
+      }
+
+      .menu span::after {
+        transform: translateY(4px);
+      }
+
+      .workspace {
+        display: grid;
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
+      .tile {
+        border: 1px solid #d8dee9;
+        border-radius: 8px;
+        padding: 12px;
+        display: grid;
+        gap: 7px;
+        min-height: 116px;
+      }
+
+      .ok {
+        border-left: 5px solid #0f766e;
+      }
+
+      .warn {
+        border-left: 5px solid #c2410c;
+      }
+
+      .unknown {
+        border-left: 5px solid #6b7280;
+      }
+
+      .label {
+        font-size: 12px;
+        color: #4b5563;
+        text-transform: uppercase;
+      }
+
+      .big {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .form {
+        border: 1px solid #d8dee9;
+        border-radius: 8px;
+        padding: 14px;
+        display: grid;
+        gap: 12px;
+        background: #fbfcfe;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1.1fr 0.8fr 0.8fr 1fr;
+        gap: 10px;
+      }
+
+      .field {
+        display: grid;
+        gap: 4px;
+      }
+
+      .field label {
+        font-size: 12px;
+        color: #475569;
+      }
+
+      input,
+      select,
+      textarea,
+      button {
+        font: inherit;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 8px;
+        background: #ffffff;
+      }
+
+      textarea {
+        min-height: 68px;
+        resize: vertical;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        padding: 9px 12px;
+        background: #0f766e;
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      button.secondary {
+        background: #475569;
+      }
+
+      .state-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+      }
+
+      .state {
+        border: 1px dashed #94a3b8;
+        border-radius: 6px;
+        padding: 8px;
+        background: #ffffff;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        main {
+          padding: 16px;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <h1>AGENT-670 Codex Limits Form</h1>
+        <p>
+          Selected direction: Option A - Adaptive Limit Windows With Atomic Save
+          Panel.
+        </p>
+      </section>
+
+      <section class="options" aria-label="Design options">
+        <article class="screen">
+          <header>
+            <div class="shell-title">
+              <div class="menu" aria-hidden="true"><span></span></div>
+              <h2>Option A - Adaptive Limit Windows With Atomic Save Panel</h2>
+            </div>
+            <strong>AGENT</strong>
+          </header>
+          <div class="workspace">
+            <div class="summary">
+              <section class="tile ok">
+                <span class="label">Current plan</span>
+                <strong>Available</strong>
+                <span class="big">82% left</span>
+                <span>Resets Aug 11, 04:00</span>
+              </section>
+              <section class="tile warn">
+                <span class="label">Short window</span>
+                <strong>Low limit</strong>
+                <span class="big">9% left</span>
+                <span>Resets Aug 10, 16:00</span>
+              </section>
+              <section class="tile unknown">
+                <span class="label">Unknown window</span>
+                <strong>Needs update</strong>
+                <span class="big">--</span>
+                <span>Shape not recognized</span>
+              </section>
+            </div>
+
+            <form class="form">
+              <h3>Atomic update</h3>
+              <div class="row">
+                <div class="field">
+                  <label for="window">Window name</label>
+                  <input id="window" value="Current plan" />
+                </div>
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status">
+                    <option>available</option>
+                    <option>limited</option>
+                    <option>unknown</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="used">Used percent</label>
+                  <input id="used" type="number" min="0" max="100" value="18" />
+                </div>
+                <div class="field">
+                  <label for="reset">Reset datetime</label>
+                  <input id="reset" type="datetime-local" value="2026-08-11T04:00" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="cutoff">Cutoff percent</label>
+                  <input id="cutoff" type="number" min="1" max="100" value="90" />
+                </div>
+                <div class="field">
+                  <label for="note">Operator note</label>
+                  <textarea id="note">Pro plan now uses one quota pool.</textarea>
+                </div>
+              </div>
+              <div class="actions">
+                <button type="button">Save limit record</button>
+                <button class="secondary" type="button">Refresh</button>
+                <span>Preview ready - 1 window will be saved atomically.</span>
+              </div>
+            </form>
+          </div>
+        </article>
+
+        <article class="screen">
+          <header>
+            <div class="shell-title">
+              <div class="menu" aria-hidden="true"><span></span></div>
+              <h2>Option B - Split Summary And Wizard</h2>
+            </div>
+            <strong>AGENT</strong>
+          </header>
+          <div class="workspace">
+            <div class="summary">
+              <section class="tile warn">
+                <span class="label">Broad window</span>
+                <strong>Limit reached</strong>
+                <span class="big">0% left</span>
+                <span>Wait until reset</span>
+              </section>
+            </div>
+            <form class="form">
+              <h3>Wizard step 1</h3>
+              <p>
+                Wizard layout reduces field density but makes repeated updates
+                slower for the Product Owner.
+              </p>
+              <div class="state-grid">
+                <span class="state">Loading</span>
+                <span class="state">Empty</span>
+                <span class="state">Available</span>
+                <span class="state">Low limit</span>
+                <span class="state">Limit reached</span>
+                <span class="state">Stale record</span>
+                <span class="state">Unknown window</span>
+                <span class="state">Validation error</span>
+                <span class="state">Save success</span>
+                <span class="state">Save failure</span>
+              </div>
+            </form>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

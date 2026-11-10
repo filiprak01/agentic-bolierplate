@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Boilerplate Release 1.0.0 Documentation Overview</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #52606d;
+      --line: #d8dee8;
+      --paper: #fbfcfe;
+      --panel: #ffffff;
+      --blue: #2456a6;
+      --green: #207c5a;
+      --amber: #a66c19;
+      --rose: #a9443d;
+      --teal: #237986;
+      --violet: #6155a6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(35, 121, 134, 0.12), rgba(36, 86, 166, 0.08) 42%, rgba(32, 124, 90, 0.12)),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+    .deck {
+      width: min(1200px, 100%);
+      aspect-ratio: 16 / 9;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 60px rgba(23, 32, 42, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      height: 100%;
+      padding: 48px 58px 54px;
+      grid-template-rows: auto 1fr auto;
+      gap: 20px;
+    }
+    .slide.active { display: grid; }
+    .kicker {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1, h2 {
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.04;
+    }
+    h1 { font-size: clamp(42px, 5vw, 70px); max-width: 940px; }
+    h2 { font-size: clamp(30px, 3.6vw, 50px); }
+    h3 { margin: 0 0 8px; font-size: 21px; }
+    p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 19px; }
+    ul, ol { margin: 0; padding-left: 22px; }
+    li { margin: 7px 0; font-size: 17px; line-height: 1.34; }
+    code {
+      background: #edf1f6;
+      border: 1px solid #dfe5ed;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    .grid { display: grid; gap: 16px; }
+    .two { grid-template-columns: 1fr 1fr; }
+    .three { grid-template-columns: repeat(3, 1fr); }
+    .four { grid-template-columns: repeat(4, 1fr); }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 112px;
+    }
+    .panel p, .panel li { font-size: 16px; }
+    .ok { border-color: #aed8c8; background: #f2fbf7; }
+    .warn { border-color: #e8c984; background: #fff9eb; }
+    .risk { border-color: #e8aaa4; background: #fff4f2; }
+    .info { border-color: #a9cfdb; background: #f1fbfd; }
+    .violet { border-color: #c8c2eb; background: #f7f5ff; }
+    .strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+    .step {
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--blue);
+      border-radius: 8px;
+      background: #fff;
+      padding: 13px;
+      min-height: 118px;
+    }
+    .step:nth-child(2) { border-top-color: var(--teal); }
+    .step:nth-child(3) { border-top-color: var(--green); }
+    .step:nth-child(4) { border-top-color: var(--amber); }
+    .step:nth-child(5) { border-top-color: var(--violet); }
+    .step:nth-child(6) { border-top-color: var(--rose); }
+    .step strong { display: block; font-size: 16px; margin-bottom: 8px; }
+    .step span { color: var(--muted); font-size: 13px; line-height: 1.3; display: block; }
+    .doc-list {
+      columns: 2;
+      column-gap: 26px;
+      padding-left: 18px;
+    }
+    .doc-list li {
+      break-inside: avoid;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .dense li { font-size: 14px; margin: 4px 0; }
+    .metric {
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric b { font-size: 34px; color: var(--blue); }
+    .metric span { color: var(--muted); font-size: 14px; }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+    .nav {
+      position: fixed;
+      right: 20px;
+      bottom: 18px;
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--blue); }
+    @media (max-width: 880px) {
+      main { padding: 0; }
+      .deck { min-height: 100vh; aspect-ratio: auto; border: 0; box-shadow: none; }
+      .slide { padding: 28px 22px 82px; }
+      .two, .three, .four, .strip { grid-template-columns: 1fr; }
+      .doc-list { columns: 1; }
+      h1 { font-size: 40px; }
+      h2 { font-size: 31px; }
+      p, li { font-size: 17px; }
+      .nav { left: 12px; right: 12px; justify-content: space-between; }
+    }
+    @media print {
+      body { background: #fff; }
+      main { display: block; padding: 0; }
+      .deck { width: 100%; aspect-ratio: auto; border: 0; box-shadow: none; }
+      .slide { display: grid !important; min-height: 100vh; page-break-after: always; }
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="deck" aria-live="polite">
+      <section class="slide active">
+        <header>
+          <div class="kicker">Release 1.0.0</div>
+          <h1>Documentation Overview For Product Owner Review</h1>
+        </header>
+        <div class="grid two">
+          <div>
+            <p>This deck maps the documentation set for the agentic boilerplate. The Markdown files remain AI-first source contracts; this presentation is the human overview for deciding whether the release is understandable enough to use for the first real project.</p>
+          </div>
+          <div class="panel ok">
+            <h3>Review stance</h3>
+            <p>Keep docs modular for Codex. Add human summaries only as navigation layers, release notes, and presentations.</p>
+          </div>
+        </div>
+        <footer class="footer"><span>docs/presentations/release-1.0.0-docs-overview.html</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Principle</div>
+          <h2>Docs Are Primarily Agent Contracts</h2>
+        </header>
+        <div class="strip">
+          <div class="step"><strong>Purpose</strong><span>Why this workflow exists and when an agent should use it.</span></div>
+          <div class="step"><strong>Inputs</strong><span>Required records, Jira fields, durable files, and configuration.</span></div>
+          <div class="step"><strong>Outputs</strong><span>Plans, JSON records, comments, evidence, reports, or PR metadata.</span></div>
+          <div class="step"><strong>Gates</strong><span>PO approval, dependency eligibility, tests, review, regression, and release checks.</span></div>
+          <div class="step"><strong>Recovery</strong><span>Durable files that let work resume after Codex limits or container stops.</span></div>
+          <div class="step"><strong>Validation</strong><span>Tests and evidence that prove the workflow contract still holds.</span></div>
+        </div>
+        <footer class="footer"><span>Human readability is useful, but agent precision wins.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Inventory</div>
+          <h2>Documentation Shape At Release 1.0.0</h2>
+        </header>
+        <div class="grid four">
+          <div class="metric"><b>77</b><span>Markdown docs reviewed under <code>docs/</code></span></div>
+          <div class="metric"><b>2</b><span>Existing HTML handoff/status decks</span></div>
+          <div class="metric"><b>8</b><span>MVP worker roles documented</span></div>
+          <div class="metric"><b>1</b><span>New release docs overview deck</span></div>
+        </div>
+        <div class="panel info">
+          <h3>Finding</h3>
+          <p>The docs are intentionally many small files. That is good for Codex retrieval because a worker can load only the relevant workflow contract instead of carrying a large manual into context.</p>
+        </div>
+        <footer class="footer"><span>Reviewed by title, headings, AI-readiness signals, and release consistency.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Entry Points</div>
+          <h2>Start Here Before A New Project</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>PO and operator overview</h3>
+            <ul>
+              <li><code>README.md</code></li>
+              <li><code>docs/getting-started.md</code></li>
+              <li><code>docs/credential-setup.md</code></li>
+              <li><code>docs/mvp-finalization-audit.md</code></li>
+              <li><code>docs/release-notes/mvp-release-1.md</code></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Release presentations</h3>
+            <ul>
+              <li><code>docs/presentations/mvp-handoff.html</code></li>
+              <li><code>docs/presentations/mvp-roadmap-status.html</code></li>
+              <li><code>docs/presentations/release-1.0.0-docs-overview.html</code></li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>These are the human navigation files. Codex should still load specific workflow docs.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Control Layer</div>
+          <h2>PO, Governance, And Durable Decisions</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel ok">
+            <h3>What Codex should use</h3>
+            <ul class="doc-list">
+              <li><code>documentation-governance.md</code></li>
+              <li><code>po-inbox-schema.md</code></li>
+              <li><code>po-inbox-store.md</code></li>
+              <li><code>po-inbox-cli.md</code></li>
+              <li><code>po-inbox-api.md</code></li>
+              <li><code>story-backed-change-and-pr-visibility.md</code></li>
+              <li><code>retro-follow-up-roadmap.md</code></li>
+              <li><code>retro-publication-workflow.md</code></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Agent contract</h3>
+            <ul>
+              <li>Do not guess missing PO decisions.</li>
+              <li>Create durable inbox questions when scope or requirements are unclear.</li>
+              <li>Keep shared and role-specific documentation separate.</li>
+              <li>Publish approved report artifacts to Confluence-ready outputs.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>Best next UI later: PO inbox and evidence browser.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Planning</div>
+          <h2>Backlog, Architecture, Context, And Routing</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Workflow docs</h3>
+            <ul class="doc-list">
+              <li><code>backlog-draft-workflow.md</code></li>
+              <li><code>jira-story-creation-workflow.md</code></li>
+              <li><code>architecture-templates.md</code></li>
+              <li><code>nfr-workflow.md</code></li>
+              <li><code>context-pack-generator.md</code></li>
+              <li><code>story-complexity-model.md</code></li>
+              <li><code>codex-subscription-setup.md</code></li>
+              <li><code>sprint-fit-planner.md</code></li>
+              <li><code>release-scope-model.md</code></li>
+            </ul>
+          </div>
+          <div class="panel info">
+            <h3>AI usage focus</h3>
+            <ul>
+              <li>Context packs should be generated from approved story sources.</li>
+              <li>Open questions must block worker execution.</li>
+              <li>Model and reasoning are routed by agent role first, task complexity second.</li>
+              <li>Sprint sizing is scope-first; complexity is warning and routing metadata.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>These docs are the strongest AI-first cluster in the release.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Integrations</div>
+          <h2>Jira, GitHub, Confluence, AgileTest</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Adapter and workflow docs</h3>
+            <ul class="doc-list">
+              <li><code>jira-project-issue-adapter.md</code></li>
+              <li><code>jira-workflow-links.md</code></li>
+              <li><code>jira-status-transition-workflow.md</code></li>
+              <li><code>jira-sprint-lifecycle-synchronization.md</code></li>
+              <li><code>dependency-eligibility-checker.md</code></li>
+              <li><code>github-adapter.md</code></li>
+              <li><code>confluence-adapter.md</code></li>
+              <li><code>confluence-report-publication-workflow.md</code></li>
+              <li><code>integration-mock-layer.md</code></li>
+              <li><code>agiletest-test-execution-upsert-helper.md</code></li>
+              <li><code>agiletest-test-case-consistency-validator.md</code></li>
+              <li><code>agiletest-regression-suite-integration.md</code></li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <h3>Release 1.0.0 boundary</h3>
+            <ul>
+              <li>Adapters are contract-first and mockable.</li>
+              <li>Live credentials are configured per target project.</li>
+              <li>AgileTest startup probing is a later hardening item if required.</li>
+              <li>The current <code>AGENT</code> Jira project is a dogfooding example, not a hard-coded product assumption.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>For first project setup, check configuration docs before running workers.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Runtime</div>
+          <h2>Codex, Docker, Durable Storage, And Resume</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Runtime docs</h3>
+            <ul class="doc-list">
+              <li><code>docker-compose-foundation.md</code></li>
+              <li><code>docker-worker-readiness.md</code></li>
+              <li><code>startup-validation.md</code></li>
+              <li><code>database-migrations.md</code></li>
+              <li><code>agent-registry-assignment-store.md</code></li>
+              <li><code>scheduler-approved-scope-assignment.md</code></li>
+              <li><code>codex-job-artifacts.md</code></li>
+              <li><code>codex-pause-resume-artifacts.md</code></li>
+              <li><code>codex-limit-availability.md</code></li>
+              <li><code>host-side-codex-runner.md</code></li>
+              <li><code>worktree-cleanup-workflow.md</code></li>
+            </ul>
+          </div>
+          <div class="panel ok">
+            <h3>Agent contract</h3>
+            <ul>
+              <li>Workers persist assignments, failed requests, logs, and limit state before stopping.</li>
+              <li>Docker workers run role-specific dry-run loops in Release 1.0.0.</li>
+              <li>Live Codex execution stays host-controlled until a later PO-approved scaling step.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>The runtime docs prioritize recoverability over autonomy.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Delivery</div>
+          <h2>Developer, Review, And Tester Workflows</h2>
+        </header>
+        <div class="grid three">
+          <div class="panel">
+            <h3>Developer</h3>
+            <ul class="dense">
+              <li><code>developer-subtask-workflow.md</code></li>
+              <li><code>developer-branch-commit-validation-workflow.md</code></li>
+              <li><code>developer-pull-request-creation-workflow.md</code></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Review</h3>
+            <ul class="dense">
+              <li><code>review-agent-pr-workflow.md</code></li>
+              <li><code>review-records.md</code></li>
+              <li><code>delivery-state-consistency-guard.md</code></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Tester</h3>
+            <ul class="dense">
+              <li><code>tester-manual-test-workflow.md</code></li>
+              <li><code>tester-bug-retest-workflow.md</code></li>
+              <li><code>test-evidence-artifact-workflow.md</code></li>
+              <li><code>evidence-publication-helper.md</code></li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel info">
+          <h3>AI usage focus</h3>
+          <p>These docs are written as executable process contracts: create visible subtasks, validate before PR, review diff-first, test after merge, create linked bugs for failures, and keep Jira state consistent.</p>
+        </div>
+        <footer class="footer"><span>This is the core delivery loop for the first generated project.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Regression And Release</div>
+          <h2>Evidence, AgileTest, E2E, And Release Readiness</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Release docs</h3>
+            <ul class="doc-list">
+              <li><code>behavioral-regression-visibility.md</code></li>
+              <li><code>regression-classification-agiletest-mapping.md</code></li>
+              <li><code>regression-manifest-builder.md</code></li>
+              <li><code>regression-artifact-publication.md</code></li>
+              <li><code>sprint-regression-overview-workflow.md</code></li>
+              <li><code>release-manager-scope-selection.md</code></li>
+              <li><code>release-notes-regression-scope.md</code></li>
+              <li><code>release-e2e-scenario-map.md</code></li>
+              <li><code>release-e2e-runner.md</code></li>
+              <li><code>release-e2e-agiletest-plan.md</code></li>
+              <li><code>release-branch-version-workflow.md</code></li>
+              <li><code>hotfix-branch-workflow.md</code></li>
+            </ul>
+          </div>
+          <div class="panel ok">
+            <h3>Release 1.0.0 readiness pattern</h3>
+            <ul>
+              <li>Story tests validate individual acceptance criteria.</li>
+              <li>Sprint regression checks behavioral changes.</li>
+              <li>Release E2E validates the full delivery workflow.</li>
+              <li>Release notes and readiness summaries are Confluence-ready.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>Regression docs should remain structured for Release Manager and Tester agents.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Sprint Records</div>
+          <h2>Historical Sprint Docs Are Evidence, Not Main Manuals</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Files</h3>
+            <ul class="doc-list">
+              <li><code>sprints/sprint-1-routing-metadata.md</code></li>
+              <li><code>sprints/sprint-4-closure.md</code></li>
+              <li><code>sprints/sprint-4-retro.md</code></li>
+              <li><code>sprints/sprint-5-closure.md</code></li>
+              <li><code>sprints/sprint-5-retro.md</code></li>
+              <li><code>sprints/sprint-6-closure.md</code></li>
+              <li><code>sprints/sprint-6-retro.md</code></li>
+              <li><code>sprints/sprint-performance-tracking.md</code></li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <h3>How Codex should use them</h3>
+            <ul>
+              <li>Use sprint docs as historical evidence and process learning.</li>
+              <li>Do not treat old sprint retros as current requirements unless the rule was promoted into a workflow doc.</li>
+              <li>Use <code>docs/sprints/sprint-performance-tracking.md</code> for planning heuristics and limit-pressure history.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>This prevents stale sprint context from biasing future worker decisions.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">AI-Readiness Review</div>
+          <h2>What Looks Good And What To Improve</h2>
+        </header>
+        <div class="grid three">
+          <div class="panel ok">
+            <h3>Strong</h3>
+            <ul>
+              <li>Docs are small and workflow-specific.</li>
+              <li>Many docs define durable files, gates, and roles.</li>
+              <li>PO control and Jira visibility are consistently repeated.</li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <h3>Minor gaps</h3>
+            <ul>
+              <li>Not every doc has a <code>Status:</code> marker.</li>
+              <li>Not every doc has an explicit <code>Agent Usage</code> section.</li>
+              <li>Some sprint docs are historical and should not be loaded as primary policy.</li>
+            </ul>
+          </div>
+          <div class="panel info">
+            <h3>Changed now</h3>
+            <ul>
+              <li><code>README.md</code> status now reflects Release <code>1.0.0</code>.</li>
+              <li>This deck adds the human navigation layer.</li>
+              <li>No broad merge into one mega-doc is recommended.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>Finding: separate docs are valid and better for Codex context control.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Backlog Guidance</div>
+          <h2>One Bug Or Separate Stories?</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel ok">
+            <h3>Recommendation</h3>
+            <p>Do not create one broad bug for all docs. Use separate backlog stories for specific doc-contract improvements, because each improvement affects a different worker role and acceptance criteria.</p>
+          </div>
+          <div class="panel">
+            <h3>Suggested follow-ups</h3>
+            <ol>
+              <li>Add a lightweight doc catalog/index generated from the docs folder.</li>
+              <li>Normalize missing <code>Status:</code> markers where they affect release confidence.</li>
+              <li>Add explicit <code>Agent Usage</code> sections only to docs used directly by workers.</li>
+              <li>Tag historical sprint docs as evidence-only context.</li>
+            </ol>
+          </div>
+        </div>
+        <footer class="footer"><span>These are improvement stories, not blockers for controlled first-project setup.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">PO Usage Without UI</div>
+          <h2>How You Review The Project Today</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel">
+            <h3>For knowledge</h3>
+            <ol>
+              <li>Read this deck first.</li>
+              <li>Open <code>docs/presentations/mvp-handoff.html</code> for release usage.</li>
+              <li>Open <code>docs/presentations/mvp-roadmap-status.html</code> for roadmap/status.</li>
+              <li>Use <code>getting-started.md</code> when configuring the first target project.</li>
+            </ol>
+          </div>
+          <div class="panel">
+            <h3>For decisions</h3>
+            <ol>
+              <li>Use Jira for scope and status.</li>
+              <li>Use PO inbox CLI for local questions until UI exists.</li>
+              <li>Use evidence files and Confluence-ready reports for acceptance review.</li>
+              <li>Use release notes to decide whether to create the release branch.</li>
+            </ol>
+          </div>
+        </div>
+        <footer class="footer"><span>The UI gap is known; the process is still inspectable through files and Jira.</span><span class="count"></span></footer>
+      </section>
+
+      <section class="slide">
+        <header>
+          <div class="kicker">Release Decision Aid</div>
+          <h2>Documentation Is Ready For Controlled Dogfooding</h2>
+        </header>
+        <div class="grid two">
+          <div class="panel ok">
+            <h3>Ready</h3>
+            <ul>
+              <li>Docs cover setup, workflow roles, state, testing, regression, release, and reporting.</li>
+              <li>Docs are modular enough for Codex to load targeted context.</li>
+              <li>Known UI and live-worker limitations are documented.</li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <h3>Watch while using</h3>
+            <ul>
+              <li>Keep first-project decisions in Jira and PO inbox, not only in chat.</li>
+              <li>Promote repeated decisions into shared docs.</li>
+              <li>Create narrow doc stories when a worker needs clearer contract structure.</li>
+            </ul>
+          </div>
+        </div>
+        <footer class="footer"><span>Next practical step: configure the first target project and run the setup flow.</span><span class="count"></span></footer>
+      </section>
+    </article>
+  </main>
+
+  <nav class="nav" aria-label="Slide navigation">
+    <button id="prev" type="button">Previous</button>
+    <button id="next" type="button">Next</button>
+  </nav>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    let current = 0;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, position) => slide.classList.toggle("active", position === current));
+      document.querySelectorAll(".count").forEach((node) => {
+        node.textContent = `${current + 1} / ${slides.length}`;
+      });
+    }
+
+    document.getElementById("prev").addEventListener("click", () => show(current - 1));
+    document.getElementById("next").addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    show(0);
+  </script>
+</body>
+</html>

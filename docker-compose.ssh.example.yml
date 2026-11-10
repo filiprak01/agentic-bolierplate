@@ -1,0 +1,72 @@
+# Optional Docker Compose override for Docker-worker GitHub SSH auth.
+#
+# Usage:
+#   GITHUB_AUTH_MODE=ssh GIT_REMOTE_MODE=ssh \
+#   HOST_GITHUB_SSH_KEY_PATH=/absolute/host/path/to/deploy_key \
+#   docker compose -f docker-compose.yml -f docker-compose.ssh.example.yml --profile workers up
+#
+# Do not commit real key files. Prefer a least-privilege deploy key or bot key.
+
+x-agentic-ssh-volumes: &agentic-ssh-volumes
+  - .:/workspace
+  - ./data:/workspace/data
+  - ${TARGET_PROJECT_PATH:-.}:/workspace/project
+  - type: bind
+    source: ${HOST_GITHUB_SSH_KEY_PATH}
+    target: /run/secrets/github_ssh_key
+    read_only: true
+
+x-agentic-ssh-environment: &agentic-ssh-environment
+  GITHUB_AUTH_MODE: ssh
+  GIT_REMOTE_MODE: ssh
+  GITHUB_SSH_KEY_PATH: /run/secrets/github_ssh_key
+  GITHUB_SSH_PRIVATE_KEY: ""
+  GITHUB_SSH_PRIVATE_KEY_B64: ""
+  GITHUB_SSH_STRICT_HOST_KEY_CHECKING: "true"
+
+services:
+  worker:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-product-planning:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-architecture:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-developer:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-review:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-tester:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-release-manager:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-scheduler:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-platform:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-frontend:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-ui-ux:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-security:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-docs-confluence:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-devops-platform:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes
+  worker-data-persistence:
+    environment: *agentic-ssh-environment
+    volumes: *agentic-ssh-volumes

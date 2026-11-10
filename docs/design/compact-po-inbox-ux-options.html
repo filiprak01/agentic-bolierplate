@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AGENT-667 Compact PO Inbox UX Options</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        --ink: #17202a;
+        --muted: #526070;
+        --line: #d8dee6;
+        --panel: #ffffff;
+        --surface: #f5f7fa;
+        --nav: #10232b;
+        --accent: #0f766e;
+        --accent-soft: #d8f3ef;
+        --warn: #b45309;
+        --warn-soft: #fff2d6;
+        --danger: #b42318;
+        --danger-soft: #ffe3df;
+        --info: #2563eb;
+        --info-soft: #dbeafe;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--surface);
+        color: var(--ink);
+      }
+
+      main {
+        max-width: 1460px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        font-size: 19px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      .intro {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .intro p {
+        max-width: 930px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .option {
+        overflow: hidden;
+        min-height: 760px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .option-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: #0b5f59;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .mock {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        height: 690px;
+        background: #eef2f5;
+      }
+
+      .top {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        min-height: 66px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .hamburger {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--nav);
+        font-weight: 900;
+      }
+
+      .title {
+        display: grid;
+        min-width: 0;
+        gap: 2px;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .title strong,
+      .row-title,
+      .detail-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .project-key {
+        min-width: 70px;
+        padding: 9px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: #2e4a55;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .status-strip,
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        overflow: hidden;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--line);
+        background: #f8fafc;
+      }
+
+      .toolbar {
+        flex-wrap: wrap;
+        background: #fff;
+      }
+
+      .pill,
+      .filter,
+      .action {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .pill {
+        padding: 0 10px;
+      }
+
+      .pill.good {
+        background: var(--accent-soft);
+        color: #0b5f59;
+      }
+
+      .pill.warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .pill.bad {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .pill.info {
+        background: var(--info-soft);
+        color: var(--info);
+      }
+
+      .filter {
+        border: 1px solid var(--line);
+        padding: 0 12px;
+        background: #fff;
+        color: #2f4552;
+      }
+
+      .search {
+        flex: 1 1 170px;
+        min-width: 140px;
+        min-height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0 10px;
+        color: var(--muted);
+      }
+
+      .split-pane {
+        display: grid;
+        grid-template-columns: minmax(240px, 0.72fr) minmax(0, 1.28fr);
+        min-height: 0;
+      }
+
+      .queue {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        min-height: 0;
+        overflow: auto;
+        padding: 12px;
+        border-right: 1px solid var(--line);
+        background: #f8fafc;
+      }
+
+      .queue-row {
+        display: grid;
+        gap: 5px;
+        min-height: 82px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .queue-row.selected {
+        border-color: var(--accent);
+        background: #eefbf8;
+      }
+
+      .row-meta,
+      .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .row-footer {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .detail {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-height: 0;
+        background: #fff;
+      }
+
+      .detail-header {
+        display: grid;
+        gap: 8px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .detail-body {
+        display: grid;
+        gap: 14px;
+        min-height: 0;
+        overflow: auto;
+        padding: 16px;
+      }
+
+      .detail-card {
+        display: grid;
+        gap: 6px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .detail-card p {
+        color: #334155;
+        line-height: 1.45;
+      }
+
+      .action-dock {
+        display: grid;
+        gap: 10px;
+        padding: 12px 16px;
+        border-top: 1px solid var(--line);
+        background: #fff;
+        box-shadow: 0 -8px 20px rgba(35, 51, 65, 0.06);
+      }
+
+      .action-dock textarea {
+        min-height: 74px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .action {
+        border: 1px solid var(--line);
+        padding: 0 12px;
+        background: #fff;
+        color: #244a58;
+      }
+
+      .action.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .state-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .state {
+        min-height: 68px;
+        border: 1px dashed #b8c5cf;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      .drawer-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+        min-height: 0;
+      }
+
+      .queue-table {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        overflow: auto;
+        padding: 12px;
+      }
+
+      .table-row {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.7fr) minmax(180px, 1.2fr) minmax(82px, 0.42fr);
+        gap: 8px;
+        align-items: center;
+        min-height: 56px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        font-size: 13px;
+      }
+
+      .side-drawer {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-height: 0;
+        border-left: 1px solid var(--line);
+        background: #fff;
+      }
+
+      @media (max-width: 980px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding: 14px;
+        }
+
+        .split-pane,
+        .drawer-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .queue,
+        .side-drawer {
+          border-right: 0;
+          border-left: 0;
+        }
+
+        .mock {
+          height: auto;
+          min-height: 740px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <h1>AGENT-667 Compact PO Inbox UX Options</h1>
+        <p>
+          Review artifact for the Release 1.2 operator UI. The selected
+          direction is Option A because it keeps the inbox queue, selected
+          message, project identity, and decision controls visible together.
+        </p>
+      </section>
+
+      <section class="options" aria-label="PO inbox layout options">
+        <article class="option">
+          <header class="option-header">
+            <div>
+              <p class="eyebrow">Selected</p>
+              <h2>Option A - Split Pane With Sticky Action Dock</h2>
+            </div>
+            <span class="badge">Recommended</span>
+          </header>
+
+          <div class="mock">
+            <div class="top">
+              <button class="hamburger" type="button">=</button>
+              <div class="title">
+                <span class="eyebrow">Agentic Console</span>
+                <strong>PO Inbox</strong>
+              </div>
+              <div class="project-key">AP</div>
+            </div>
+
+            <div class="status-strip">
+              <span class="pill bad">3 blockers</span>
+              <span class="pill warn">Limits 88%</span>
+              <span class="pill good">API connected</span>
+              <span class="pill info">All Projects</span>
+            </div>
+
+            <div class="toolbar">
+              <span class="filter">All Projects</span>
+              <span class="filter">Open</span>
+              <span class="filter">Blocking first</span>
+              <input class="search" value="Search issue, agent, title" aria-label="Search" readonly />
+              <span class="filter">Export JSON</span>
+              <span class="filter">Refresh</span>
+            </div>
+
+            <div class="split-pane">
+              <aside class="queue" aria-label="Inbox queue">
+                <div class="queue-row selected">
+                  <strong class="row-title">AP-29 needs architecture scope</strong>
+                  <span class="row-meta">Architecture Agent - blocking question</span>
+                  <div class="row-footer">
+                    <span class="pill bad">AP</span>
+                    <span class="row-meta">5 min ago</span>
+                  </div>
+                </div>
+                <div class="queue-row">
+                  <strong class="row-title">AGENT-672 export format approval</strong>
+                  <span class="row-meta">Product Planning - approval request</span>
+                  <div class="row-footer">
+                    <span class="pill info">AGENT</span>
+                    <span class="row-meta">18 min ago</span>
+                  </div>
+                </div>
+                <div class="queue-row">
+                  <strong class="row-title">Regression scope confirmation</strong>
+                  <span class="row-meta">Release Manager - assumption</span>
+                  <div class="row-footer">
+                    <span class="pill warn">AP</span>
+                    <span class="row-meta">42 min ago</span>
+                  </div>
+                </div>
+                <div class="state">
+                  <strong>Per-project error</strong>
+                  <p class="muted">AGENT unavailable; AP inbox still loaded.</p>
+                </div>
+              </aside>
+
+              <section class="detail" aria-label="Selected inbox item">
+                <header class="detail-header">
+                  <span class="pill bad">Blocking question</span>
+                  <h3 class="detail-title">AP-29 needs architecture scope</h3>
+                  <span class="muted">Project AP - Architecture Agent - jira AP-29</span>
+                </header>
+                <div class="detail-body">
+                  <div class="detail-card">
+                    <strong>Message</strong>
+                    <p>
+                      The architecture agent found two possible deployment
+                      paths. The long message stays inside this scrollable
+                      detail body, while answer controls remain visible below.
+                    </p>
+                  </div>
+                  <div class="detail-card">
+                    <strong>Recommendation</strong>
+                    <p>
+                      Start with local Docker Compose and prepare cloud
+                      infrastructure as a later release track.
+                    </p>
+                  </div>
+                  <div class="detail-card">
+                    <strong>Impact</strong>
+                    <p>
+                      The answer controls infrastructure scope, sprint split,
+                      and DevSecOps backlog.
+                    </p>
+                  </div>
+                  <div class="state-grid">
+                    <div class="state"><strong>Loading</strong><p class="muted">Skeleton rows, disabled actions.</p></div>
+                    <div class="state"><strong>Empty</strong><p class="muted">No open items, filters remain visible.</p></div>
+                    <div class="state"><strong>Answered</strong><p class="muted">Terminal label, invalid actions disabled.</p></div>
+                    <div class="state"><strong>Failed API</strong><p class="muted">Safe banner with no secrets.</p></div>
+                  </div>
+                </div>
+                <footer class="action-dock">
+                  <textarea readonly>Decision text</textarea>
+                  <div class="actions">
+                    <button class="action primary" type="button">Answer</button>
+                    <button class="action" type="button">Approve</button>
+                    <button class="action" type="button">Reject</button>
+                    <button class="action" type="button">Resolve</button>
+                    <button class="action" type="button">Export selected</button>
+                  </div>
+                </footer>
+              </section>
+            </div>
+          </div>
+        </article>
+
+        <article class="option">
+          <header class="option-header">
+            <div>
+              <p class="eyebrow">Alternative</p>
+              <h2>Option B - Queue First With Drawer Detail</h2>
+            </div>
+            <span class="badge">Comparison</span>
+          </header>
+
+          <div class="mock">
+            <div class="top">
+              <button class="hamburger" type="button">=</button>
+              <div class="title">
+                <span class="eyebrow">Agentic Console</span>
+                <strong>PO Inbox</strong>
+              </div>
+              <div class="project-key">ALL</div>
+            </div>
+
+            <div class="status-strip">
+              <span class="pill bad">3 blockers</span>
+              <span class="pill warn">1 project warning</span>
+              <span class="pill good">2 projects loaded</span>
+            </div>
+
+            <div class="toolbar">
+              <span class="filter">All Projects</span>
+              <span class="filter">Questions</span>
+              <span class="filter">Approvals</span>
+              <input class="search" value="Filter by project or issue" aria-label="Filter" readonly />
+              <span class="filter">Export all</span>
+            </div>
+
+            <div class="drawer-layout">
+              <section class="queue-table" aria-label="Inbox table">
+                <div class="table-row">
+                  <strong>AP-29</strong>
+                  <span>Architecture scope decision</span>
+                  <span class="pill bad">Open</span>
+                </div>
+                <div class="table-row">
+                  <strong>AGENT-672</strong>
+                  <span>Export format approval</span>
+                  <span class="pill warn">Open</span>
+                </div>
+                <div class="table-row">
+                  <strong>AP-31</strong>
+                  <span>Regression plan note</span>
+                  <span class="pill good">Answered</span>
+                </div>
+                <div class="state-grid">
+                  <div class="state"><strong>Many items</strong><p class="muted">Queue keeps full width.</p></div>
+                  <div class="state"><strong>Drawer closed</strong><p class="muted">Good for triage, slower for answers.</p></div>
+                  <div class="state"><strong>Project filter</strong><p class="muted">AP, AGENT, or All Projects.</p></div>
+                  <div class="state"><strong>Error state</strong><p class="muted">Safe per-project banner.</p></div>
+                </div>
+              </section>
+
+              <aside class="side-drawer" aria-label="Inbox detail drawer">
+                <header class="detail-header">
+                  <span class="pill bad">AP blocking question</span>
+                  <h3 class="detail-title">Architecture scope decision</h3>
+                  <span class="muted">Drawer detail competes for width.</span>
+                </header>
+                <div class="detail-body">
+                  <div class="detail-card">
+                    <strong>Message</strong>
+                    <p>
+                      The selected message appears in a secondary drawer. This
+                      works for triage, but each answer requires opening the
+                      detail drawer first.
+                    </p>
+                  </div>
+                  <div class="detail-card">
+                    <strong>Recommendation</strong>
+                    <p>Prefer Option A for PO answer sessions.</p>
+                  </div>
+                </div>
+                <footer class="action-dock">
+                  <textarea readonly>Decision text</textarea>
+                  <div class="actions">
+                    <button class="action primary" type="button">Answer</button>
+                    <button class="action" type="button">Reject</button>
+                    <button class="action" type="button">Resolve</button>
+                  </div>
+                </footer>
+              </aside>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

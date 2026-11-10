@@ -1,0 +1,73 @@
+name: CI
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install development dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run pytest
+        run: python -m pytest --junitxml=data/ci/pytest.xml
+      - name: Upload pytest results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-pytest-results
+          path: data/ci/pytest.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  compose:
+    name: Docker Compose
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate Docker Compose
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f docker-compose.yml ]]; then
+            echo "No docker-compose.yml present; Compose validation is not applicable."
+            exit 0
+          fi
+
+          # Keep service env_file resolution away from the developer's .env.
+          validation_dir="$(mktemp -d)"
+          trap 'rm -f "$validation_dir/.env"; rmdir "$validation_dir"' EXIT
+          cp .github/ci/compose.env "$validation_dir/.env"
+          compose=(docker compose --project-name agentic-ci
+            --project-directory "$validation_dir" --env-file "$validation_dir/.env"
+            -f "$PWD/docker-compose.yml" --profile "*")
+
+          "${compose[@]}" config --quiet
+          echo "Base Compose configuration and all profiles passed."
+          if [[ -f docker-compose.ssh.example.yml ]]; then
+            "${compose[@]}" -f "$PWD/docker-compose.ssh.example.yml" config --quiet
+            echo "SSH example override and all profiles passed."
+          fi

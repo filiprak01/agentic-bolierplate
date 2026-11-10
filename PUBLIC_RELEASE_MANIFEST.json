@@ -1,0 +1,13 @@
+{
+  "excluded_files": 27,
+  "excluded_roots": [
+    "data/",
+    "docs/reports/"
+  ],
+  "format_version": 1,
+  "included_files": 555,
+  "license": "Apache-2.0",
+  "replacement_count": 9,
+  "source_commit": "bc43e8be206d05b92218a00b4f690e2bef4faa86",
+  "tree_sha256": "902bf56d10a7d3fd24930a04de843db9b718caa1f12d30c045fa872f7dca1227"
+}
