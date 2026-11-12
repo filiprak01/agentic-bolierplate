@@ -1,8 +1,10 @@
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 def test_agents_md_documents_global_ui_design_gate(project_root: Path) -> None:
-    content = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+    content = platform_agents_instruction_path(project_root).read_text(encoding="utf-8")
 
     assert "## UI Design Gate" in content
     assert "must not start from a visual or interaction assumption" in content

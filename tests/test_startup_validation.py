@@ -212,7 +212,7 @@ def test_worker_startup_message_contains_role_context() -> None:
         worker_id="developer-1",
     )
 
-    assert "Read AGENTS.md first." in message
+    assert "Read /workspace/platform/docs/reference/platform-agent-instructions.md first." in message
     assert "Act as developer Agent" in message
     assert "developer.md" in message
     assert "/workspace/data/context-packs/AP-29.json" in message

@@ -62,6 +62,8 @@ def test_executor_builds_args_prompt_and_subscription_env(tmp_path: Path, monkey
     assert "The host runner will persist your final response and execution result to:" in invocation.prompt
     assert "Do not write or overwrite the host-owned result file" in invocation.prompt
     assert "Write durable result to:" not in invocation.prompt
+    assert "Read AGENTS.md when present" in invocation.prompt
+    assert "otherwise explicitly load docs/reference/platform-agent-instructions.md" in invocation.prompt
     assert CODEX_RESULT_MARKER in invocation.prompt
 
 

@@ -9,6 +9,7 @@ from agentic_boilerplate.domain.po_inbox import AgentRole
 
 TARGET_PROJECT_AGENTS_TEMPLATE_PATH = Path("docs/templates/target-project-AGENTS.md")
 CODEX_QUOTA_GUARD_SKILL_PATH = Path(".agents/skills/codex-quota-guard/SKILL.md")
+PLATFORM_AGENTS_REFERENCE_PATH = Path("docs/reference/platform-agent-instructions.md")
 
 
 @dataclass(frozen=True)
@@ -47,7 +48,7 @@ def validate_worker_instruction_bundle(
 
     root = Path(instruction_root).expanduser()
     checks = [
-        _file_check("instructions.root_agents", root / "AGENTS.md"),
+        _file_check("instructions.root_agents", platform_agents_instruction_path(root)),
         _file_check("instructions.role", root / "ai_agents" / "roles" / f"{role.value}.md"),
         _file_check("instructions.session_starters", root / "ai_agents" / "session_starters" / "README.md"),
         _file_check("instructions.context_pack_workflow", root / "docs" / "context-pack-generator.md"),
@@ -115,6 +116,14 @@ def resolve_assignment_context_pack_path(
         return context_root / normalized.removeprefix(short_prefix)
 
     return Path(instruction_root).expanduser() / raw_path
+
+
+def platform_agents_instruction_path(instruction_root: Path | str = ".") -> Path:
+    """Resolve explicit worker context without requiring an auto-discovery file."""
+
+    root = Path(instruction_root).expanduser()
+    entrypoint = root / "AGENTS.md"
+    return entrypoint if entrypoint.is_file() else root / PLATFORM_AGENTS_REFERENCE_PATH
 
 
 def target_project_agents_template_path(instruction_root: Path | str = ".") -> Path:

@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,7 +21,7 @@ def test_multi_repo_traceability_policy_documents_required_lanes_and_fallback() 
 def test_story_and_pr_workflows_reference_multi_repo_traceability_policy() -> None:
     story_workflow = (PROJECT_ROOT / "docs/jira-story-creation-workflow.md").read_text(encoding="utf-8")
     pr_workflow = (PROJECT_ROOT / "docs/developer-pull-request-creation-workflow.md").read_text(encoding="utf-8")
-    agents = (PROJECT_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    agents = platform_agents_instruction_path(PROJECT_ROOT).read_text(encoding="utf-8")
 
     assert "Expected Repositories" in story_workflow
     assert "docs/multi-repo-jira-github-traceability.md" in story_workflow

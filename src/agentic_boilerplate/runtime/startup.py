@@ -14,6 +14,7 @@ from agentic_boilerplate.config import (
     validate_required_settings,
 )
 from agentic_boilerplate.domain import AgentRole
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
 from agentic_boilerplate.integrations.git_ssh_auth import git_ssh_auth_config_from_settings, validate_git_ssh_auth
 from agentic_boilerplate.storage import (
     FileAgentAssignmentStore,
@@ -156,7 +157,7 @@ def build_worker_startup_message(
     role_value = AgentRole(role)
     root = Path(instruction_root)
     lines = [
-        "Read AGENTS.md first.",
+        f"Read {platform_agents_instruction_path(root)} first.",
         f"Act as {role_value.value} Agent for the configured assignment.",
         f"Load role instructions from {root / 'ai_agents' / 'roles' / f'{role_value.value}.md'}.",
         "Run startup diagnostics, Codex limit checks, dependency checks, and PO inbox checks before work.",

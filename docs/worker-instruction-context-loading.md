@@ -10,12 +10,19 @@ role instructions and story context without reconstructing prompts from chat.
 Before a worker accepts an assignment, it must validate that these files are
 available from the configured instruction root:
 
-1. `AGENTS.md`
+1. `AGENTS.md`, or `docs/reference/platform-agent-instructions.md` when the
+   public-main auto-discovery entrypoint is absent
 2. `ai_agents/roles/{role}.md`
 3. `ai_agents/session_starters/README.md`
 4. `docs/context-pack-generator.md`
 5. `.agents/skills/codex-quota-guard/SKILL.md`
 6. `docs/templates/target-project-AGENTS.md`
+
+The public-main external-tool exception changes only automatic instruction
+discovery. Explicit worker startup loads the resolved platform file and still
+fails validation when both locations are missing. The original entrypoints
+remain in `release/1.2.0` and `v1.2.0`; see
+[external-tool mode](reference/external-tool-mode.md).
 
 The worker log includes a redacted instruction checklist. It reports file
 availability and path labels only. It must not read file contents into the log.
