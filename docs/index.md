@@ -26,6 +26,7 @@ site is a readable publication layer, not a replacement for agent-facing docs.
 
 ## Release And Evidence
 
+- [Release 1.3.0 Planning Addendum](https://github.com/filiprak01/agentic-bolierplate/blob/main/docs/planning/release-1.3.0.md)
 - [Release 1.2.0 Notes](release-notes/release-1.2.0.md)
 - [Release 1.2 Operator Guide](release-1.2-operator-guide.md)
 - [Release 1.2 Migration Guide](release-1.2-migration-guide.md)
