@@ -264,7 +264,7 @@ def test_agent_process_docs_reference_traceability_audit() -> None:
     traceability_doc = "docs/documentation-to-backlog-traceability-audit.md"
 
     required_files = (
-        "AGENTS.md",
+        "docs/reference/platform-agent-instructions.md",
         "ai_agents/roles/product_planning.md",
         "ai_agents/roles/docs_confluence.md",
         "ai_agents/roles/orchestrator.md",

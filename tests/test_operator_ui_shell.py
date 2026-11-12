@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 def test_operator_ui_uses_modern_local_frontend_stack(project_root: Path) -> None:
     package = json.loads((project_root / "ui" / "operator" / "package.json").read_text(encoding="utf-8"))
@@ -240,7 +242,7 @@ def test_operator_ui_exposes_worker_lifecycle_dashboard(project_root: Path) -> N
 
 
 def test_stacked_pr_operator_visibility_is_discoverable_by_roles(project_root: Path) -> None:
-    agents = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+    agents = platform_agents_instruction_path(project_root).read_text(encoding="utf-8")
     index = (project_root / "docs" / "index.md").read_text(encoding="utf-8")
     resolver = (project_root / "docs" / "stacked-pr-sprint-path-resolver.md").read_text(encoding="utf-8")
     visibility = (project_root / "docs" / "stacked-pr-operator-visibility.md").read_text(

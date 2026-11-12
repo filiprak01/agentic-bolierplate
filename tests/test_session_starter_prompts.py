@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 ROLE_FILES = (
     "orchestrator",
@@ -55,7 +57,7 @@ def test_session_starter_prompts_stay_short_and_reference_docs(project_root: Pat
 
 
 def test_agents_md_links_session_starter_prompts(project_root: Path) -> None:
-    agents_md = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+    agents_md = platform_agents_instruction_path(project_root).read_text(encoding="utf-8")
 
     assert "ai_agents/session_starters/README.md" in agents_md
 

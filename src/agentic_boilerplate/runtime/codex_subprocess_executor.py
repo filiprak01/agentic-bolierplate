@@ -224,7 +224,8 @@ def build_codex_stage_prompt(request: CodexRunnerRequest, *, marker: str = CODEX
     return "\n".join(
         (
             f"Act as the {request.role.value} agent for Jira issue {request.jira_issue_key}.",
-            "Read AGENTS.md and the role instruction files referenced by AGENTS.md before changing files.",
+            "Read AGENTS.md when present; otherwise explicitly load docs/reference/platform-agent-instructions.md. "
+            "Read the referenced role instruction files before changing files.",
             f"Work in repository path: {request.target_repo_path}",
             f"Use branch: {request.branch_name}",
             f"Load context pack: {request.context_pack_path}",

@@ -3,6 +3,7 @@ from pathlib import Path
 from agentic_boilerplate.domain import AgentRole
 from agentic_boilerplate.domain.worker_instruction_bundle import (
     format_worker_instruction_bundle_validation,
+    platform_agents_instruction_path,
     resolve_assignment_context_pack_path,
     validate_worker_instruction_bundle,
     worker_instruction_failure_reason,
@@ -25,6 +26,39 @@ def test_worker_instruction_bundle_passes_with_role_docs_and_assignment_context(
     assert result.passed
     assert not result.failed_checks
     assert worker_instruction_failure_reason(result) == ""
+
+
+def test_worker_instruction_bundle_uses_manual_reference_when_root_entrypoint_is_absent(tmp_path: Path) -> None:
+    root = _instruction_root(tmp_path)
+    reference = root / "docs/reference/platform-agent-instructions.md"
+    reference.parent.mkdir(parents=True)
+    (root / "AGENTS.md").rename(reference)
+
+    result = validate_worker_instruction_bundle(role=AgentRole.DEVELOPER, instruction_root=root)
+
+    assert result.passed
+    assert platform_agents_instruction_path(root) == reference
+    assert next(check.path for check in result.checks if check.name == "instructions.root_agents") == str(reference)
+
+
+def test_worker_instruction_bundle_prefers_explicit_root_entrypoint(tmp_path: Path) -> None:
+    root = _instruction_root(tmp_path)
+    reference = root / "docs/reference/platform-agent-instructions.md"
+    reference.parent.mkdir(parents=True)
+    reference.write_text("manual reference", encoding="utf-8")
+
+    assert platform_agents_instruction_path(root) == root / "AGENTS.md"
+
+
+def test_worker_instruction_bundle_rejects_missing_root_and_reference(tmp_path: Path) -> None:
+    root = _instruction_root(tmp_path)
+    (root / "AGENTS.md").unlink()
+
+    result = validate_worker_instruction_bundle(role=AgentRole.DEVELOPER, instruction_root=root)
+
+    assert not result.passed
+    assert [check.name for check in result.failed_checks] == ["instructions.root_agents"]
+    assert "instructions.root_agents" in worker_instruction_failure_reason(result)
 
 
 def test_worker_instruction_bundle_reports_missing_role_file_without_contents(tmp_path: Path) -> None:

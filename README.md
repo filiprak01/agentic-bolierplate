@@ -299,10 +299,19 @@ Tester Agent tests after merge to `main`.
 
 ## Agent Instructions
 
-Codex-compatible instructions live in `AGENTS.md`, reusable skills live under
-`.agents/skills/`, and role definitions live under `ai_agents/roles/`.
-`CLAUDE.md` provides the matching Claude entry point so either tool can load the
-same repository-owned process and documentation.
+Public `main` temporarily omits root `AGENTS.md` and `CLAUDE.md` so external
+tools do not automatically load the repository's agent process. The unchanged
+instructions remain available for explicit loading as
+[platform instructions](docs/reference/platform-agent-instructions.md) and
+[Claude handoff](docs/reference/claude-handoff.md). Worker validation still
+requires the platform instructions; it accepts the reference path when the
+root entrypoint is absent. This does not disable process or security checks.
+
+Reusable skills remain under `.agents/skills/`, and role definitions remain
+under `ai_agents/roles/`. The stable `release/1.2.0` branch and immutable
+`v1.2.0` tag retain both original root files and are unchanged.
+See [external-tool mode and fallback](docs/reference/external-tool-mode.md)
+for version switching and restoration commands.
 
 ## License
 

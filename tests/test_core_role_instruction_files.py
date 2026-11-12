@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 CORE_ROLE_FILES = {
     "orchestrator": ("gpt-5.5", "high"),
@@ -56,7 +58,7 @@ def test_core_role_instruction_files_cover_required_contract(project_root: Path)
 
 
 def test_agents_md_links_core_role_instruction_files(project_root: Path) -> None:
-    agents_md = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+    agents_md = platform_agents_instruction_path(project_root).read_text(encoding="utf-8")
 
     assert "ai_agents/roles/" in agents_md
     for role_name in CORE_ROLE_FILES:
@@ -102,7 +104,7 @@ def test_release_11_role_instructions_do_not_default_to_medium(project_root: Pat
 def test_expanded_role_instructions_mark_mandatory_and_handoff_rules(project_root: Path) -> None:
     roles_dir = project_root / "ai_agents" / "roles"
     readme = (roles_dir / "README.md").read_text(encoding="utf-8")
-    agents_md = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+    agents_md = platform_agents_instruction_path(project_root).read_text(encoding="utf-8")
 
     for role_name in MANDATORY_RELEASE_11_ROLES:
         content = (roles_dir / f"{role_name}.md").read_text(encoding="utf-8")

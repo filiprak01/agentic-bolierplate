@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from agentic_boilerplate.domain.worker_instruction_bundle import platform_agents_instruction_path
+
 
 def test_agents_md_defines_project_scoped_worker_context() -> None:
     text = _normalized("AGENTS.md")
@@ -73,4 +75,5 @@ def test_scheduler_assignment_policy_carries_project_identity_and_reset_gate() -
 
 
 def _normalized(path: str) -> str:
-    return " ".join(Path(path).read_text(encoding="utf-8").split())
+    resolved = platform_agents_instruction_path() if path == "AGENTS.md" else Path(path)
+    return " ".join(resolved.read_text(encoding="utf-8").split())
